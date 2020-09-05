@@ -1,7 +1,7 @@
 // code for creating Basic Map (Level 1)
 // Creating map object
 const myMap = L.map("map", {
-    center: [40.7, -94.5],
+    center: [37.09, -95.71],
     zoom: 3
 });
 
@@ -17,7 +17,7 @@ L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 
 // create function to determine color based on significance of eq
 function getStyle(sig){
-    let color;
+    // use color brewer to assign color values
     if (sig <= 250) {
         return '#fee5d9';
     }
@@ -43,7 +43,7 @@ const url = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/1.0_month
 d3.json(url).then( 
     jsonData => {
         console.log(jsonData.features);
-        const newTime = new Date()
+
         jsonData.features.forEach(response => {
             L.circle([response.geometry.coordinates[1], response.geometry.coordinates[0]],
                 {
@@ -59,6 +59,18 @@ d3.json(url).then(
                     <h3>Significance:: ${response.properties.sig}</h3>`)
                     .addTo(myMap);
     })
-// create legend
-
+    // create legend
+    const legend = L.control({position: 'bottomright'});
+    legend.onAdd = function() {
+        const div = L.DomUtil.create("div", "info legend");
+        div.innerHTML += "<b>EQ Significance</b><br><br>";
+        significance = [0,250,500,750,1000];
+        for (var i=0; i < significance.length; i++) {
+            div.innerHTML +=
+                '<i style= "background:' + getStyle(significance[i] + 1) + '"></i>' +
+                significance[i] + (significance[i + 1] ? '-' + significance[i + 1] + '<br><br>': '+');
+        }
+        return div;
+    };
+    legend.addTo(myMap);
 });
