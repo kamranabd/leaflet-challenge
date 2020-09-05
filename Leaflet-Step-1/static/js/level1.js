@@ -54,4 +54,6 @@ d3.json(url).then(
                 }
         ).addTo(myMap);
     })
+// create legend
+
 });
