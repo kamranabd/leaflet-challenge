@@ -1,1 +1,0 @@
-// code for creating Basic Map (Level 1)
